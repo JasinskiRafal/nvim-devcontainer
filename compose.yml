@@ -9,8 +9,8 @@ services:
         - USER_GID=$USER_GID
         - USER_UID=$USER_UID
     volumes:
-      - ./config:/workspace
-      - ./config:/home/rafalj/.config/nvim
+      - ./nvim-config:/workspace
+      - ./nvim-config:/home/rafalj/.config/nvim
     working_dir: /workspace
     environment:
       - TERM=xterm-256color
