@@ -1,5 +1,5 @@
 services:
-  nvim-cfg-dev:
+  nvim-devcontainer:
     image: nvim-dev:latest
     hostname: nvim-dev
     build:
