@@ -52,3 +52,4 @@ USER rafalj
 RUN nvim --headless -c "Lazy! sync" -c qa
 RUN nvim --headless -c "TSInstall all" -c qa
 RUN nvim --headless -c "MasonToolsInstallSync" -c qa
+RUN curl https://raw.githubusercontent.com/palantir/python-language-server/refs/heads/develop/pyls/plugins/rope_rename.py > /home/rafalj/.local/share/nvim/mason/packages/python-lsp-server/venv/lib/python3.11/site-packages/pylsp/plugins/rope_rename.py
