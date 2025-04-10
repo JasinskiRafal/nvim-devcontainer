@@ -1,5 +1,5 @@
 # setup the base image, in case you have your env created elsewhere
-ARG BASE_IMAGE=debian:latest
+ARG BASE_IMAGE=debian:bookworm
 FROM ${BASE_IMAGE}
 
 # root section
@@ -52,4 +52,3 @@ USER rafalj
 RUN nvim --headless -c "Lazy! sync" -c qa
 RUN nvim --headless -c "TSInstall all" -c qa
 RUN nvim --headless -c "MasonToolsInstallSync" -c qa
-RUN curl https://raw.githubusercontent.com/palantir/python-language-server/refs/heads/develop/pyls/plugins/rope_rename.py > /home/rafalj/.local/share/nvim/mason/packages/python-lsp-server/venv/lib/python3.11/site-packages/pylsp/plugins/rope_rename.py
