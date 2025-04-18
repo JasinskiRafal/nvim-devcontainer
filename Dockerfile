@@ -10,6 +10,7 @@ RUN apt-get update -y && apt-get upgrade -y
 RUN apt-get install -y wget
 RUN wget https://github.com/neovim/neovim/releases/download/v0.11.0/nvim-linux-x86_64.tar.gz -P /tmp/
 RUN tar xzvf /tmp/nvim-linux-x86_64.tar.gz -C /tmp/
+RUN rm /tmp/nvim-linux-x86_64.tar.gz
 RUN cp -r /tmp/nvim-linux-x86_64/* /usr/local/
 
 # install all dependencies for neovim
@@ -50,5 +51,4 @@ RUN chown rafalj /home/rafalj/.config
 # Set working directory and switch to the new user
 USER rafalj
 RUN nvim --headless -c "Lazy! sync" -c qa
-RUN nvim --headless -c "TSInstall all" -c qa
 RUN nvim --headless -c "MasonToolsInstallSync" -c qa
