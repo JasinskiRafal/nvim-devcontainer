@@ -1,3 +1,7 @@
+# Set build arguments for UID and GID
+ARG USER_UID=1000
+ARG USER_GID=1000
+
 # setup the base image, in case you have your env created elsewhere
 ARG BASE_IMAGE=debian:bookworm
 FROM ${BASE_IMAGE}
@@ -26,9 +30,6 @@ RUN apt-get install -y fd-find
 RUN apt-get install -y luarocks
 
 # user section
-# Set build arguments for UID and GID
-ARG USER_UID=1000
-ARG USER_GID=1000
 
 # Handle group creation
 RUN if getent group ${USER_GID} > /dev/null; then \
@@ -45,7 +46,7 @@ RUN if id -u ${USER_UID} > /dev/null 2>&1; then \
     useradd --uid ${USER_UID} --gid ${USER_GID} --create-home rafalj
 
 
-COPY nvim-config/ /home/rafalj/.config/nvim
+ADD nvim-config/ /home/rafalj/.config/nvim
 RUN chown rafalj /home/rafalj/.config
 
 # Set working directory and switch to the new user
