@@ -8,6 +8,7 @@ services:
       args:
         - USER_GID=$USER_GID
         - USER_UID=$USER_UID
+        - BASE_IMAGE=debian:latest
     volumes:
       - ./nvim-config:/workspace
       - ./nvim-config:/home/rafalj/.config/nvim
