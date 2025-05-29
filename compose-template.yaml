@@ -1,17 +1,20 @@
 services:
+  base-image:
+    image: base-image:latest
+    build:
+      context: ./project
+
   nvim-devcontainer:
     image: nvim-dev:latest
     hostname: nvim-dev
     build:
       context: .
-      dockerfile: Dockerfile
       args:
         - USER_GID=$USER_GID
         - USER_UID=$USER_UID
-        - BASE_IMAGE=debian:latest
+        - BASE_IMAGE=base-image:latest
     volumes:
-      - ./nvim-config:/workspace
-      - ./nvim-config:/home/rafalj/.config/nvim
+      - ./project:/workspace
     working_dir: /workspace
     environment:
       - TERM=xterm-256color

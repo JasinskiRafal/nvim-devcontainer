@@ -1,7 +1,3 @@
-# Set build arguments for UID and GID
-ARG USER_UID=1000
-ARG USER_GID=1000
-
 # setup the base image, in case you have your env created elsewhere
 ARG BASE_IMAGE=debian:bookworm
 FROM ${BASE_IMAGE}
@@ -30,20 +26,23 @@ RUN apt-get install -y fd-find
 RUN apt-get install -y luarocks
 
 # user section
+# Set build arguments for UID and GID
+ARG USER_UID=1000
+ARG USER_GID=1000
 
 # Handle group creation
-RUN if getent group ${USER_GID} > /dev/null; then \
-        echo "Group with GID ${USER_GID} already exists"; \
+RUN if getent group $USER_GID; then \
+        echo "Group with GID $USER_GID already exists"; \
     else \
-        groupadd --gid ${USER_GID} dev; \
+        groupadd --gid $USER_GID dev; \
     fi
 
 # Handle user creation
-RUN if id -u ${USER_UID} > /dev/null 2>&1; then \
-        echo "User with UID ${USER_UID} already exists, deleting..."; \
-        userdel -r $(getent passwd ${USER_UID} | cut -d: -f1) || true; \
+RUN if getent passwd $USER_UID; then \
+        echo "User with UID $USER_UID already exists, deleting..."; \
+        userdel -r $(getent passwd $USER_UID | cut -d: -f1) || true; \
     fi && \
-    useradd --uid ${USER_UID} --gid ${USER_GID} --create-home rafalj
+    useradd --uid $USER_UID --gid $USER_GID --create-home rafalj
 
 
 ADD nvim-config/ /home/rafalj/.config/nvim
