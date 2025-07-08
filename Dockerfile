@@ -24,6 +24,8 @@ RUN apt-get install -y ghostscript
 RUN apt-get install -y ripgrep
 RUN apt-get install -y fd-find
 RUN apt-get install -y luarocks
+RUN apt-get install -y openocd
+
 
 # user section
 # Set build arguments for UID and GID
@@ -48,7 +50,26 @@ RUN if getent passwd $USER_UID; then \
 ADD nvim-config/ /home/rafalj/.config/nvim
 RUN chown rafalj /home/rafalj/.config
 
+RUN usermod -aG plugdev rafalj
+
 # Set working directory and switch to the new user
 USER rafalj
+
 RUN nvim --headless -c "Lazy! sync" -c qa
 RUN nvim --headless -c "MasonToolsInstallSync" -c qa
+
+RUN git config --global user.name "Rafal Jasinski"
+RUN git config --global user.email rajs@softwaremind.com
+
+# Use bash for the shell
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+# Create a script file sourced by both interactive and non-interactive bash shells
+ENV BASH_ENV /home/rafalj/.bash_env
+RUN touch "${BASH_ENV}"
+RUN echo '. "${BASH_ENV}"' >> ~/.bashrc
+
+# Download and install nvm
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | PROFILE="${BASH_ENV}" bash
+RUN echo node > /home/rafalj/.nvmrc
+RUN nvm install node
