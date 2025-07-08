@@ -25,6 +25,7 @@ RUN apt-get install -y ripgrep
 RUN apt-get install -y fd-find
 RUN apt-get install -y luarocks
 RUN apt-get install -y openocd
+RUN apt-get install -y bear
 
 
 # user section
