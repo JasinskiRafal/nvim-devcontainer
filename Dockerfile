@@ -27,7 +27,6 @@ RUN apt-get install -y luarocks
 RUN apt-get install -y openocd
 RUN apt-get install -y bear
 
-
 # user section
 # Set build arguments for UID and GID
 ARG USER_UID=1000
@@ -74,3 +73,6 @@ RUN echo '. "${BASH_ENV}"' >> ~/.bashrc
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | PROFILE="${BASH_ENV}" bash
 RUN echo node > /home/rafalj/.nvmrc
 RUN nvm install node
+
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y
+
