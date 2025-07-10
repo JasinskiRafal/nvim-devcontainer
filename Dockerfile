@@ -13,6 +13,13 @@ RUN tar xzvf /tmp/nvim-linux-x86_64.tar.gz -C /tmp/
 RUN rm /tmp/nvim-linux-x86_64.tar.gz
 RUN cp -r /tmp/nvim-linux-x86_64/* /usr/local/
 
+#install lazygit
+RUN wget https://github.com/jesseduffield/lazygit/releases/download/v0.53.0/lazygit_0.53.0_Linux_x86_64.tar.gz -P /tmp/
+RUN tar -xvf /tmp/lazygit_0.53.0_Linux_x86_64.tar.gz -C /tmp/
+RUN ls -la /tmp
+RUN rm /tmp/lazygit_0.53.0_Linux_x86_64.tar.gz
+RUN mv /tmp/lazygit /usr/local/bin
+
 # install all dependencies for neovim
 RUN apt-get install -y git
 RUN apt-get install -y build-essential
