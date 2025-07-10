@@ -1,4 +1,5 @@
 services:
+  # Remove this service if there is no real base image to build on top of
   base-image:
     image: base-image:latest
     build:
@@ -12,6 +13,7 @@ services:
       args:
         - USER_GID=$USER_GID
         - USER_UID=$USER_UID
+        # Remove this variable if you are developing standalone
         - BASE_IMAGE=base-image:latest
     volumes: &_volumes
       - ./project:/workspace
