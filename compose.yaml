@@ -21,6 +21,14 @@ services:
       - "/dev/bus/usb:/dev/bus/usb"
     environment:
       - TERM=xterm-256color
+  bash:
+    image: nvim-dev:latest
+    working_dir: /workspace
+    volumes:
+      - ./project:/workspace
+    command: "nvim ."
+    stdin_open: true
+    tty: true
   nvim:
     image: nvim-dev:latest
     working_dir: /workspace
