@@ -29,11 +29,11 @@ services:
     working_dir: *_working_dir
     devices: *_devices
     environment: *_environment
+    depends_on:
+      - devcontainer
     command: "bash"
     stdin_open: true
     tty: true
-    depends_on:
-      - devcontainer
 
   develop:
     image: *_image
@@ -41,8 +41,33 @@ services:
     working_dir: *_working_dir
     devices: *_devices
     environment: *_environment
+    depends_on:
+      - devcontainer
     command: "nvim ."
     stdin_open: true
     tty: true
+
+  debug-server:
+    image: *_image
+    volumes: *_volumes
+    working_dir: *_working_dir
+    devices: *_devices
+    environment: *_environment
+    expose:
+      - 61234
+    command: /opt/st/stm32cubeclt_1.18.0/STLink-gdb-server/bin/ST-LINK_gdbserver -p 61234 -l 1 -d -s -cp /opt/st/stm32cubeclt_1.18.0/STM32CubeProgrammer/bin/ -m 1 -k
+
+  debug:
+    image: *_image
+    volumes: *_volumes
+    working_dir: *_working_dir
+    devices: *_devices
+    environment: *_environment
     depends_on:
-      - devcontainer
+      - debug-server
+    ports:
+      - 61234:61234
+    command: gdb-multiarch --ex "target extended-remote debug-server:61234" --command /workspace/debug-session /workspace/Makefile/FSBL/build/make-ai-example_FSBL.elf
+    stdin_open: true
+    tty: true
+
