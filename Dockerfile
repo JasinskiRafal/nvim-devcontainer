@@ -3,6 +3,10 @@ ARG BASE_IMAGE=debian:bookworm
 FROM ${BASE_IMAGE}
 
 # root section
+
+# Use bash for the shell
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 # install packages
 RUN apt-get update -y && apt-get upgrade -y
 
@@ -68,9 +72,6 @@ RUN nvim --headless -c "MasonToolsInstallSync" -c qa
 RUN git config --global user.name "Rafal Jasinski"
 RUN git config --global user.email rajs@softwaremind.com
 
-# Use bash for the shell
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-
 # Create a script file sourced by both interactive and non-interactive bash shells
 ENV BASH_ENV=/home/rafalj/.bash_env
 RUN touch "${BASH_ENV}"
@@ -82,4 +83,5 @@ RUN echo node > /home/rafalj/.nvmrc
 RUN nvm install node
 
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y
+RUN mkdir /home/rafalj/.config/lazygit && touch /home/rafalj/.config/lazygit/config.yml
 
