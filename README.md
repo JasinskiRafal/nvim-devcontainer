@@ -85,7 +85,7 @@ target extended-remote should target the same hostname as the debug-server
 ## .nvim.lua
 Every project can have their own ``.nvim.lua`` file used to define LSP server configuration, debug configuration and usercommands usable by the project
 
-LSP:
+**LSP**:
 Enable an LSP configuration
 ``` lua
   vim.lsp.enable("clangd")
@@ -101,13 +101,15 @@ Configure an LSP configuration
   })
 ```
 
-Debug:
+**Debug**:
 There is a plugin present mason-nvim-dap that provied default configurations per file extension.
 In case a specific configuration is needed please follow:
 
 ``` lua
   local dap = require("dap")
   local dap_cortex_debug = require("dap-cortex-debug")
+
+  -- configure debugging your executable
   config = {
           cwd = vim.fn.getcwd(),
           executable = vim.fn.getcwd() .. "/Makefile/FSBL/build/make-ai-example_FSBL.elf",
@@ -120,7 +122,7 @@ In case a specific configuration is needed please follow:
           serverpath = "/opt/st/stm32cubeclt_1.18.0/STLink-gdb-server/bin/ST-LINK_gdbserver",
           stlinkPath = "/opt/st/stm32cubeclt_1.18.0/STLink-gdb-server/bin/ST-LINK_gdbserver",
           stm32cubeprogrammer = "/opt/st/stm32cubeclt_1.18.0/STM32CubeProgrammer/",
-          servertype = "st-util",
+          servertype = "stlink",
           showDevDebugOutput = true,
           swoConfig = {
                   enabled = false,
@@ -129,7 +131,8 @@ In case a specific configuration is needed please follow:
           toolchainPrefix = "arm-none-eabi",
           type = "cortex_debug",
   }
-
+  
+  -- define an adapter, usually not needed
   adapter = {
           type = "executable",
           command = "node",
@@ -141,3 +144,22 @@ In case a specific configuration is needed please follow:
 ```
 
 > **NOTE**: In order to debug the configuration easily, please remember to use ``vim.print()``
+
+**User commands**
+There is a possiblity to add user commands to the directory using following syntax:
+``` lua
+  -- Create build folder and configure CMake
+  vim.api.nvim_create_user_command('CMakeConfigure', function()
+      vim.fn.system('mkdir -p build && cd build && cmake ..')
+  end, {})
+
+  -- Remove build folder
+  vim.api.nvim_create_user_command('CMakeClean', function()
+      vim.fn.system('rm -rf build')
+  end, {})
+
+  -- Run CMake build
+  vim.api.nvim_create_user_command('CMakeBuild', function()
+      vim.fn.system('cmake --build ./build -j')
+  end, {})
+```
