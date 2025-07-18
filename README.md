@@ -81,3 +81,63 @@ target extended-remote should target the same hostname as the debug-server
 ```
 
 > **NOTE**: Expose and pass the ports used by the gdb-server
+
+## .nvim.lua
+Every project can have their own ``.nvim.lua`` file used to define LSP server configuration, debug configuration and usercommands usable by the project
+
+LSP:
+Enable an LSP configuration
+``` lua
+  vim.lsp.enable("clangd")
+```
+
+Configure an LSP configuration
+``` lua
+  vim.lsp.config(
+    "clangd",
+    {
+      cmd = "clangd",
+      args = {"-query-driver=arm-none-eabi-gcc"},
+  })
+```
+
+Debug:
+There is a plugin present mason-nvim-dap that provied default configurations per file extension.
+In case a specific configuration is needed please follow:
+
+``` lua
+  local dap = require("dap")
+  local dap_cortex_debug = require("dap-cortex-debug")
+  config = {
+          cwd = vim.fn.getcwd(),
+          executable = vim.fn.getcwd() .. "/Makefile/FSBL/build/make-ai-example_FSBL.elf",
+          gdbPath = "gdb-multiarch",
+          gdbTarget = "localhost:50000",
+          name = "Example debugging with STLinkGDBServer",
+          request = "launch",
+          rttConfig = false,
+          runToEntryPoint = "main",
+          serverpath = "/opt/st/stm32cubeclt_1.18.0/STLink-gdb-server/bin/ST-LINK_gdbserver",
+          stlinkPath = "/opt/st/stm32cubeclt_1.18.0/STLink-gdb-server/bin/ST-LINK_gdbserver",
+          stm32cubeprogrammer = "/opt/st/stm32cubeclt_1.18.0/STM32CubeProgrammer/",
+          servertype = "st-util",
+          showDevDebugOutput = true,
+          swoConfig = {
+                  enabled = false,
+          },
+          extensionPath = "/usr/bin",
+          toolchainPrefix = "arm-none-eabi",
+          type = "cortex_debug",
+  }
+
+  adapter = {
+          type = "executable",
+          command = "node",
+          args = { "/home/rafalj/.local/share/nvim/mason/packages/cortex-debug/extension/dist/debugadapter.js" },
+  }
+
+  dap.configurations.c = { config }
+  dap.adapters.cortex_debug = adapter
+```
+
+> **NOTE**: In order to debug the configuration easily, please remember to use ``vim.print()``
