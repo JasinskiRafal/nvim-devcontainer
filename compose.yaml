@@ -1,36 +1,23 @@
 services:
-  # Remove this service if there is no real base image to build on top of
-  base-image:
-    image: base-image:latest
-    build:
-      context: ./project
-
   devcontainer:
-    image: &_image nvim-dev:latest
-    hostname: nvim-dev
+    image: &_image devcontainer:latest
+    hostname: &_hostname devcontainer
     build:
       context: .
       args:
         - USER_GID=$USER_GID
         - USER_UID=$USER_UID
-        # Remove this variable if you are developing standalone
-        - BASE_IMAGE=base-image:latest
     volumes: &_volumes
-      - ./project:/workspace
-      # Inside the container I am sharing my own ssh keys
       - ~/.ssh:/home/rafalj/.ssh
-    working_dir: &_working_dir
-      /workspace
-    devices: &_devices
-      - "/dev/bus/usb:/dev/bus/usb"
+    working_dir: &_working_dir /home/rafalj
     environment: &_environment
       - TERM=xterm-256color
 
   bash:
     image: *_image
+    hostname: *_hostname
     volumes: *_volumes
     working_dir: *_working_dir
-    devices: *_devices
     environment: *_environment
     depends_on:
       - devcontainer
@@ -38,11 +25,11 @@ services:
     stdin_open: true
     tty: true
 
-  develop:
+  nvim:
     image: *_image
+    hostname: *_hostname
     volumes: *_volumes
     working_dir: *_working_dir
-    devices: *_devices
     environment: *_environment
     depends_on:
       - devcontainer
@@ -50,30 +37,12 @@ services:
     stdin_open: true
     tty: true
 
-  debug-server:
+  config:
     image: *_image
-    volumes: *_volumes
-    working_dir: *_working_dir
-    devices: *_devices
+    hostname: *_hostname
+    volumes:
+      - ./nvim-config:/config
+      - ~/.ssh/:/home/rafalj/.ssh
+    working_dir: /config
     environment: *_environment
-    # Expose port of gdb server
-    expose:
-      - 61234
-    # Example server command
-    command: /opt/st/stm32cubeclt_1.18.0/STLink-gdb-server/bin/ST-LINK_gdbserver -p 61234 -l 1 -d -s -cp /opt/st/stm32cubeclt_1.18.0/STM32CubeProgrammer/bin/ -m 1 -k
 
-  debug:
-    image: *_image
-    volumes: *_volumes
-    working_dir: *_working_dir
-    devices: *_devices
-    environment: *_environment
-    depends_on:
-      - debug-server
-    #Share ports for the debug client
-    ports:
-      - 61234:61234
-    # Example client command
-    command: gdb-multiarch --ex "target extended-remote debug-server:61234" --command /workspace/debug-session /workspace/Makefile/FSBL/build/make-ai-example_FSBL.elf
-    stdin_open: true
-    tty: true

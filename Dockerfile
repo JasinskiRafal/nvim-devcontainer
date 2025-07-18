@@ -37,6 +37,8 @@ RUN apt-get install -y fd-find
 RUN apt-get install -y luarocks
 RUN apt-get install -y openocd
 RUN apt-get install -y bear
+RUN apt-get install -y imagemagick
+RUN apt-get install -y kitty
 
 # user section
 # Set build arguments for UID and GID
