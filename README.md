@@ -82,6 +82,16 @@ target extended-remote should target the same hostname as the debug-server
 
 > **NOTE**: Expose and pass the ports used by the gdb-server
 
+Helper script for running debug with tui
+``` bash
+#!/bin/bash
+
+export USER_UID=$(id -u)
+export USER_GID=$(id -g)
+
+docker compose run --rm debug
+```
+
 ## .nvim.lua
 Every project can have their own ``.nvim.lua`` file used to define LSP server configuration, debug configuration and usercommands usable by the project
 
