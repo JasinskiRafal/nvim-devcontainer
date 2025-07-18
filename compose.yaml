@@ -12,6 +12,7 @@ services:
     working_dir: &_working_dir /home/rafalj
     environment: &_environment
       - TERM=xterm-256color
+      - DISPLAY=$DISPLAY
 
   bash:
     image: *_image
@@ -42,7 +43,9 @@ services:
     hostname: *_hostname
     volumes:
       - ./nvim-config:/config
+      - ./nvim-config:/home/rafalj/.config/nvim
       - ~/.ssh/:/home/rafalj/.ssh
     working_dir: /config
     environment: *_environment
+    command: "nvim ."
 
