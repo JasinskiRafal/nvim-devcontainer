@@ -127,6 +127,13 @@ return {
       desc = "Git Branches",
     },
     {
+      "<leader>gB",
+      function()
+        Snacks.git.blame_line({0})
+      end,
+      desc = "Git Blame current line",
+    },
+    {
       "<leader>gl",
       function()
         Snacks.picker.git_log()
