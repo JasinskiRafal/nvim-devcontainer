@@ -46,4 +46,6 @@ services:
       - ~/.ssh/:/home/rafalj/.ssh
     working_dir: /config
     environment: *_environment
+    depends_on:
+      - devcontainer
 
