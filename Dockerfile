@@ -67,6 +67,7 @@ RUN usermod -aG plugdev rafalj
 
 # Set working directory and switch to the new user
 USER rafalj
+WORKDIR /home/rafalj
 
 RUN nvim --headless -c "Lazy! sync" -c qa
 RUN nvim --headless -c "MasonToolsInstallSync" -c qa
@@ -74,16 +75,16 @@ RUN nvim --headless -c "MasonToolsInstallSync" -c qa
 RUN git config --global user.name "Rafal Jasinski"
 RUN git config --global user.email rajs@softwaremind.com
 
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y
+RUN mkdir /home/rafalj/.config/lazygit && touch /home/rafalj/.config/lazygit/config.yml
+
 # Create a script file sourced by both interactive and non-interactive bash shells
-ENV BASH_ENV=/home/rafalj/.bash_env
+ENV BASH_ENV /home/rafalj/.bash_env
 RUN touch "${BASH_ENV}"
 RUN echo '. "${BASH_ENV}"' >> ~/.bashrc
 
 # Download and install nvm
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | PROFILE="${BASH_ENV}" bash
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | PROFILE="${BASH_ENV}" bash
 RUN echo node > /home/rafalj/.nvmrc
-RUN nvm install node
-
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y
-RUN mkdir /home/rafalj/.config/lazygit && touch /home/rafalj/.config/lazygit/config.yml
+RUN nvm install
 
